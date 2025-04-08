@@ -40,23 +40,43 @@ inputUpload.addEventListener('change', async (e) => { // Definimos essa função
 const inputTags = document.getElementById('input-tags');
 const listaTags = document.getElementById('lista-tags');
 
-inputTags.addEventListener('keypress', e => {
+listaTags.addEventListener('click', e => {
+    if(e.target.classList.contains("remove-tag")){
+        const tagQueQueremosRemover = e.target.parentElement;
+        listaTags.removeChild(tagQueQueremosRemover);
+    }
+})
+
+const tagsDisponiveis = ["front-end", "programação", "back-end", "data science", "full-stack", "HTML", "CSS", "javascript"];
+
+async function verificaTagsDisponiveis(tagTexto){
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(tagsDisponiveis.includes(tagTexto.toLowerCase()));
+        }, 1000);
+    })
+}
+
+inputTags.addEventListener('keypress', async e => {
     if(e.key === 'Enter'){
         e.preventDefault();
         const tagTexto = inputTags.value.trim();
 
         if(tagTexto !== ""){
-            const tagNova = document.createElement("li");
-            tagNova.innerHTML = `<p>${tagTexto}</p> <img src="./img/close-black.svg" class="remove-tag">`
-            listaTags.appendChild(tagNova);
-            inputTags.value = "";
+            try {
+                const tagExiste = await verificaTagsDisponiveis(tagTexto);
+                if(tagExiste){
+                    const tagNova = document.createElement("li");
+                    tagNova.innerHTML = `<p>${tagTexto}</p> <img src="./img/close-black.svg" class="remove-tag">`
+                    listaTags.appendChild(tagNova);
+                    inputTags.value = "";
+                } else {
+                    alert("Tag não foi encontrada.")
+                }
+            } catch(error){
+                console.error("Erro ao verificar a existência da tag");
+                alert("Erro ao verificar a existência da tag. Verifique o console.");
+            }
         }
-    }
-})
-
-listaTags.addEventListener('click', e => {
-    if(e.target.classList.contains("remove-tag")){
-        const tagQueQueremosRemover = e.target.parentElement;
-        listaTags.removeChild(tagQueQueremosRemover);
     }
 })
