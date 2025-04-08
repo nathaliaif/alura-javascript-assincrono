@@ -80,3 +80,37 @@ inputTags.addEventListener('keypress', async e => {
         }
     }
 })
+
+const botaoPublicar = document.querySelector(".botao-publicar");
+
+async function publicarProjeto(nomeDoProjeto, descricaoDoProjeto, tagsProjeto){
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const deuCerto = Math.random() > 0.5;
+
+            if(deuCerto){
+                resolve("Projeto publicado com sucesso");
+            } else {
+                reject("Erro ao publicar o projeto");
+            }
+        }, 1000)
+    })
+}
+
+botaoPublicar.addEventListener("click", async e => {
+    e.preventDefault();
+
+    const nomeDoProjeto = document.getElementById("nome").value;
+    const descricaoDoProjeto = document.getElementById("descricao").value;
+    const tagsProjeto = Array.from(listaTags.querySelectorAll("p")).map(tag => tag.textContent);
+
+    try{
+        const resultado = await publicarProjeto(nomeDoProjeto, descricaoDoProjeto, tagsProjeto)
+        console.log(resultado);
+        alert("Deu tudo certo!");
+    }catch(erro){
+        console.log("Deu errado" + erro);
+    }
+    
+})
+
